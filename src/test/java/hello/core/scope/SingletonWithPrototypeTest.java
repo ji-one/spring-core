@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Provider;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -43,11 +43,10 @@ public class SingletonWithPrototypeTest {
     static class ClientBean {
 
         @Autowired
-        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
-        // 스프링 컨테이너에서 조회해주는 대리자 (DL 서비스 제공)
+        private Provider<PrototypeBean> prototypeBeanProvider;
 
         public int logic() {
-            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+            PrototypeBean prototypeBean = prototypeBeanProvider.get();
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
