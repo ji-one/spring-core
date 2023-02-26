@@ -13,14 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LogDemoController {
 
     private final LogDemoService logDemoService;
-    private final ObjectProvider<MyLogger> myLoggerProvider; // MyLogger를 찾을 수 있는 애가 주입됨. -> 주입 시점에 주입받을 수 있음
+    private final MyLogger myLogger; // MyLogger를 찾을 수 있는 애가 주입됨. -> 주입 시점에 주입받을 수 있음.
 
     @RequestMapping("log-demo")
     @ResponseBody
     public String logDemo(HttpServletRequest request) {
         String requestURL = request.getRequestURL().toString();
-        MyLogger myLogger = myLoggerProvider.getObject();
-        myLogger.setRequestURL(requestURL);
+
+        System.out.println("myLogger = " + myLogger.getClass()); // MyLogger를 상속받은 가짜 프록시 객체 생성
+        myLogger.setRequestURL(requestURL); // 실제 기능 호출하는 시점에 진짜 MyLogger를 찾아서 동작
+
         myLogger.log("controller test");
         logDemoService.logic("testId");
         return "OK";
